@@ -43,10 +43,59 @@ class TestConfig(unittest.TestCase):
     @setup_and_teardown
     def test_get_xdg_config_file(self):
         os.environ['XDG_CONFIG_HOME'] = self.tmpdir
-        setup_config_file(os.path.join(self.tmpdir, 'tradebot'), '')
         reload(const)
+        setup_config_file(os.path.join(self.tmpdir, 'tradebot'), '')
 
         res = config.get_cfg_file()
 
         self.assertEqual(res, os.path.join(os.environ['XDG_CONFIG_HOME'],
                                             'tradebot', const.CFG_FILE))
+
+    @setup_and_teardown
+    def test_get_config_value(self):
+        os.environ['XDG_CONFIG_HOME'] = self.tmpdir
+        reload(const)
+        content = (
+            'test_key: test_value\n'
+        )
+        setup_config_file(os.path.join(self.tmpdir, 'tradebot'), content)
+
+        self.config.load()
+
+        self.assertEqual('test_value', self.config.get('test_key'))
+
+    @setup_and_teardown
+    def test_get_default_config_value(self):
+        os.environ['XDG_CONFIG_HOME'] = self.tmpdir
+        reload(const)
+        setup_config_file(os.path.join(self.tmpdir, 'tradebot'), '')
+
+        self.config.load()
+
+        self.assertNotEqual(None, self.config.get('log'))
+
+    @setup_and_teardown
+    def test_get_config_value_override_default(self):
+        os.environ['XDG_CONFIG_HOME'] = self.tmpdir
+        reload(const)
+        content = (
+            'log: test_value\n'
+        )
+        setup_config_file(os.path.join(self.tmpdir, 'tradebot'), content)
+
+        self.config.load()
+
+        self.assertEqual('test_value', self.config.get('log'))
+
+    @setup_and_teardown
+    def test_set_config_value(self):
+        os.environ['XDG_CONFIG_HOME'] = self.tmpdir
+        reload(const)
+        content = (
+            'test_key: test_value\n'
+        )
+        setup_config_file(os.path.join(self.tmpdir, 'tradebot'), content)
+        self.config.load()
+        self.config.set(test_key='override')
+
+        self.assertEqual('override', self.config.get('test_key'))

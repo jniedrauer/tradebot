@@ -2,6 +2,7 @@
 
 
 import os
+import yaml
 from . import constants as const
 
 
@@ -17,13 +18,21 @@ def get_cfg_file():
 class AppConfig(object):
         """Global statefull configuration"""
 
+        defaults = {
+            'log': '~/.tradebot.log',
+            'loglevel': 'DEBUG',
+        }
+
         def __init__(self, **kwargs):
             self.kwargs = kwargs
             self._config = {}
 
         def load(self):
             """Load configuration from file and return dict"""
-            pass
+            with open(get_cfg_file()) as cfg_file:
+                file_config = {**AppConfig.defaults,
+                               **(yaml.load(cfg_file) or {})}
+            self.set(**file_config)
 
         def get(self, arg):
             """Get a configuration parameter"""
