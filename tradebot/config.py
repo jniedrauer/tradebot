@@ -5,7 +5,7 @@ import os
 from . import constants as const
 
 
-def get_cfg_path():
+def get_cfg_file():
     """Identify the config file in order of preference"""
     for path in const.CFG_FILES:
         if os.path.isfile(path):
