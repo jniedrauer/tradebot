@@ -9,7 +9,7 @@ from . import constants as const
 def get_cfg_file():
     """Identify the config file in order of preference"""
     for path in const.CFG_FILES:
-        if os.path.isfile(path):
+        if path and os.path.isfile(path):
             return path
     else:
         raise OSError('Configuration not found')
@@ -24,7 +24,7 @@ class AppConfig(object):
         }
 
         def __init__(self, **kwargs):
-            self.kwargs = kwargs
+            self.kwargs = kwargs or {}
             self._config = {}
 
         def load(self):

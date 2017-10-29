@@ -2,6 +2,11 @@
 """Tradebot executable script"""
 
 
+import os
+os.environ['TRADEBOT_CONFIG_FILE'] = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'config_debug.yml')
+
+
 from tradebot import main
 
 
