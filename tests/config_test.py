@@ -99,3 +99,23 @@ class TestConfig(unittest.TestCase):
         self.config.set(test_key='override')
 
         self.assertEqual('override', self.config.get('test_key'))
+
+    @setup_and_teardown
+    def test_environment_config_file(self):
+        os.environ['TRADEBOT_CONFIG_FILE'] = os.path.join(self.tmpdir, 'test.yml')
+        os.environ['XDG_CONFIG_HOME'] = self.tmpdir
+        reload(const)
+
+        wrong_content = (
+            'test_key: wrong_value\n'
+        )
+        right_content = (
+            'test_key: right_value\n'
+        )
+        setup_config_file(os.path.join(self.tmpdir, 'tradebot'), wrong_content)
+        with open(os.environ['TRADEBOT_CONFIG_FILE'], 'w') as f:
+            f.write(right_content)
+
+        self.config.load()
+
+        self.assertEqual('right_value', self.config.get('test_key'))
