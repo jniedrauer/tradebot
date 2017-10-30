@@ -16,29 +16,31 @@ def get_cfg_file():
 
 
 class AppConfig(object):
-        """Global statefull configuration"""
+    """Global statefull configuration"""
 
-        defaults = {
-            'log': '~/.tradebot.log',
-            'loglevel': 'DEBUG',
-        }
+    defaults = {
+        'log': '~/.tradebot.log',
+        'loglevel': 'DEBUG',
+    }
 
-        def __init__(self, **kwargs):
-            self.kwargs = kwargs or {}
-            self._config = {}
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs or {}
+        self._config = {}
 
-        def load(self):
-            """Load configuration from file and return dict"""
-            with open(get_cfg_file()) as cfg_file:
-                file_config = {**AppConfig.defaults,
-                               **(yaml.load(cfg_file) or {})}
-            self.set(**file_config)
+    def load(self):
+        """Load configuration from file and return dict"""
+        with open(get_cfg_file()) as cfg_file:
+            file_config = {**AppConfig.defaults,
+                           **(yaml.load(cfg_file) or {})}
+        self.set(**file_config)
+        # Override file config with command line args
+        self.set(**self.kwargs)
 
-        def get(self, arg):
-            """Get a configuration parameter"""
-            return self._config.get(arg)
+    def get(self, arg):
+        """Get a configuration parameter"""
+        return self._config.get(arg)
 
-        def set(self, **kwargs):
-            """Merge two sets of parameters, with kwargs overriding existing
-            values"""
-            self._config = {**self._config, **kwargs}
+    def set(self, **kwargs):
+        """Merge two sets of parameters, with kwargs overriding existing
+        values"""
+        self._config = {**self._config, **kwargs}

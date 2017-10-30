@@ -23,9 +23,9 @@ def setup_and_teardown(f):
 
 
 def setup_config_file(path, content):
-    if not os.path.exists(path):
-        os.makedirs(path)
-    with open(os.path.join(path, const.CFG_FILE), 'w') as f:
+    if not os.path.exists(os.path.dirname(path)):
+        os.makedirs(os.path.dirname(path))
+    with open(path, 'w') as f:
         f.write(content)
 
 
@@ -44,7 +44,8 @@ class TestConfig(unittest.TestCase):
     def test_get_xdg_config_file(self):
         os.environ['XDG_CONFIG_HOME'] = self.tmpdir
         reload(const)
-        setup_config_file(os.path.join(self.tmpdir, 'tradebot'), '')
+        setup_config_file(os.path.join(self.tmpdir, 'tradebot',
+                                       const.CFG_FILE), '')
 
         res = config.get_cfg_file()
 
@@ -58,7 +59,8 @@ class TestConfig(unittest.TestCase):
         content = (
             'test_key: test_value\n'
         )
-        setup_config_file(os.path.join(self.tmpdir, 'tradebot'), content)
+        setup_config_file(os.path.join(self.tmpdir, 'tradebot',
+                                       const.CFG_FILE), content)
 
         self.config.load()
 
@@ -68,7 +70,8 @@ class TestConfig(unittest.TestCase):
     def test_get_default_config_value(self):
         os.environ['XDG_CONFIG_HOME'] = self.tmpdir
         reload(const)
-        setup_config_file(os.path.join(self.tmpdir, 'tradebot'), '')
+        setup_config_file(os.path.join(self.tmpdir, 'tradebot',
+                          const.CFG_FILE), '')
 
         self.config.load()
 
@@ -81,7 +84,8 @@ class TestConfig(unittest.TestCase):
         content = (
             'log: test_value\n'
         )
-        setup_config_file(os.path.join(self.tmpdir, 'tradebot'), content)
+        setup_config_file(os.path.join(self.tmpdir, 'tradebot',
+                                       const.CFG_FILE), content)
 
         self.config.load()
 
@@ -94,7 +98,8 @@ class TestConfig(unittest.TestCase):
         content = (
             'test_key: test_value\n'
         )
-        setup_config_file(os.path.join(self.tmpdir, 'tradebot'), content)
+        setup_config_file(os.path.join(self.tmpdir, 'tradebot',
+                                      const.CFG_FILE), content)
         self.config.load()
         self.config.set(test_key='override')
 
@@ -112,10 +117,22 @@ class TestConfig(unittest.TestCase):
         right_content = (
             'test_key: right_value\n'
         )
-        setup_config_file(os.path.join(self.tmpdir, 'tradebot'), wrong_content)
-        with open(os.environ['TRADEBOT_CONFIG_FILE'], 'w') as f:
-            f.write(right_content)
+        setup_config_file(os.path.join(self.tmpdir, 'tradebot',
+                                      const.CFG_FILE), wrong_content)
+        setup_config_file(os.environ['TRADEBOT_CONFIG_FILE'], right_content)
 
         self.config.load()
 
         self.assertEqual('right_value', self.config.get('test_key'))
+
+    @setup_and_teardown
+    def test_commandline_args(self):
+        os.environ['TRADEBOT_CONFIG_FILE'] = os.path.join(self.tmpdir, 'test.yml')
+        reload(const)
+        setup_config_file(os.environ['TRADEBOT_CONFIG_FILE'], '---')
+
+        expected = {'test_key': 'test_value'}
+        self.config = config.AppConfig(**expected)
+        self.config.load()
+
+        self.assertEqual('test_value', self.config.get('test_key'))

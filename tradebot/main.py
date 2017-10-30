@@ -2,11 +2,12 @@
 
 
 from .config import AppConfig
+from .input import read_commandline_args
 
 
 def main():
     """Module entrypoint"""
-    config = AppConfig()
+    args = read_commandline_args()
+    config = AppConfig(**args)
     config.load()
-    print(config.get('log'))
-    print(config.get('plugin'))
+    print(config._config)
