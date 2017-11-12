@@ -1,10 +1,12 @@
-# pylint: disable=invalid-name,redefined-builtin
 """Package info"""
+# pylint: disable=invalid-name,redefined-builtin
 
 
 modname = distname = 'tradebot'
-numversion = (0, 0, 1)
-version = '.'.join([str(num) for num in numversion])
+numversion = [0, 0, 1]
+numrelease = ['.dev', 1] # '.dev', 'a', 'b', 'rc' or empty for release
+version = '.'.join([str(i) for i in numversion]) + ''.join(
+    [str(i) for i in numrelease])
 
 install_requires = []
 

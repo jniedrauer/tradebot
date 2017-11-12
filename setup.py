@@ -1,5 +1,5 @@
 """Setup script for package"""
-
+# pylint: disable=exec-used
 
 import os
 from setuptools import setup
