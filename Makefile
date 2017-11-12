@@ -21,18 +21,30 @@ $(VENV)/bin/activate: requirements.txt
 	test -d $(VENV) || $(PYTHON) -m venv $(VENV)
 	$(PIP) install -Ur requirements.txt
 
-test:
-	$(PYTHON) -m unittest discover -v --start-directory=tests/ --pattern=*_test.py
+test: venv
+	( \
+		source $(VENV)/bin/activate; \
+		$(PYTHON) -m unittest discover -v --start-directory=tests/ --pattern=*_test.py; \
+	)
 
-rpm:
-	$(PYTHON) setup.py bdist_rpm
+rpm: venv
+	( \
+		source $(VENV)/bin/activate; \
+		$(PYTHON) setup.py bdist_rpm; \
+	)
 
-tgz:
-	$(PYTHON) setup.py sdist
+tgz: venv
+	( \
+		source $(VENV)/bin/activate; \
+		$(PYTHON) setup.py sdist; \
+	)
 
-wheel:
-	$(PYTHON) setup.py bdist_wheel
+wheel: venv
+	( \
+		source $(VENV)/bin/activate; \
+		$(PYTHON) setup.py bdist_wheel; \
+	)
 
 build: test tgz wheel rpm
 
-.PHONY: help test rpm tgz wheel build
+.PHONY: help source test rpm tgz wheel build
