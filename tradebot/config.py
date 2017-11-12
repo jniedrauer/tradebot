@@ -21,7 +21,7 @@ class AppConfig(object):
     defaults = {
         'log': '~/.tradebot.log',
         'loglevel': 'DEBUG',
-        'historyfile': '~./tradebot_history',
+        'historyfile': '~/.tradebot_history',
     }
 
     def __init__(self, **kwargs):
