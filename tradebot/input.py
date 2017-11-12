@@ -2,6 +2,7 @@
 
 
 import argparse
+import cmd
 import logging
 import os
 import sys
@@ -20,56 +21,36 @@ def read_commandline_args():
     return config
 
 
-class Commandline(object):
-    """App command line with history and tab completeion"""
+class Commandline(cmd.Cmd):
+    """App command line with history and tab completion"""
 
-    intro = 'Type `help` for a list of commands.\n'
-    promptline = 'Command: '
-    commands = {
-        'help': 'Show help and return',
-        'quit': 'Exit the application',
-        'enter': 'Enter a position',
-        'exit': 'Exit a position',
-    }
+    intro = 'Type help for a list of commands.\n'
+    prompt = '> '
 
-    def __init__(self, config):
-        self.config = config
-        self.log = logging.getLogger(__name__)
-        self.historyfile = os.path.expanduser(self.config.get('historyfile'))
+    # Command methods
 
+    def do_quit(self, args):
+        """Exit the application"""
+        return True
 
-    def prompt(self, prompt=None):
-        """A command line"""
-        input_ = None
-        while not input_:
-            sys.stdout.write('\n')
+    # Subclass overrides
+
+    def emptyline(self):
+        """Prevent action on emtpy line"""
+        pass
+
+    def default(self, line):
+        """Invalid command"""
+        if line == 'EOF':
+            return True
+        self.stdout.write('Invalid command: {}\n'.format(line))
+
+    def cmdloop(self, intro=None):
+        """Continue looping through KeyboardInterrupt"""
+        while True:
             try:
-                input_ = input(prompt or Commandline.promptline)
-                if input_ not in Commandline.commands:
-                    self.show_help(input_)
-                    input_ = None
-            except EOFError:
-                input_ = 'quit'
+                return cmd.Cmd.cmdloop(self, intro)
+                break
             except KeyboardInterrupt:
-                continue
-
-        if input_ == 'help':
-            self.show_help()
-            return None
-
-        self.log.debug('User entered: %s', input_)
-        return input_
-
-    @staticmethod
-    def show_help(invalid_command=None):
-        """Show a help dialog for command line"""
-        if invalid_command:
-            print('Invalid command: {}'.format(invalid_command))
-        sys.stdout.write('\n')
-        print('Valid commands:')
-        for key, value in Commandline.commands.items():
-            print('\t{}\t{}'.format(key, value))
-
-    def save_history(self):
-        """Save prompt history"""
-        import readline
+                intro = '\n'
+                pass

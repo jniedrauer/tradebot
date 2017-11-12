@@ -22,14 +22,7 @@ def main():
 
     app = MainApp(config)
 
-    while True:
-        action = app.get_action()
-        if action == 'quit':
-            sys.stdout.write('\n')
-            log.debug('Application exited')
-            break
-        else:
-            app.run_action(action)
+    app.run_commandline()
 
 
 class MainApp(object):
@@ -38,19 +31,10 @@ class MainApp(object):
     def __init__(self, config):
         self.config = config
         self.log = logging.getLogger(__name__)
-        self.cmd = Commandline(self.config)
+        self.cmd = Commandline()
 
-    def get_action(self):
-        """Get an action to run"""
-        action = self.config.get('action')
-        if action:
-            # Read first action from command line and then remove it
-            del self.config['action']
-        else:
-            action = self.cmd.prompt()
-
-        return action
-
-    def run_action(self, action):
-        """Run an action"""
-        print(action)
+    def run_commandline(self):
+        """Begin the command line loop"""
+        self.cmd.cmdloop()
+        sys.stdout.write('\n')
+        self.log.info('Exited')
