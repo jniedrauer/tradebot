@@ -4,7 +4,7 @@
 import logging
 import sys
 from .config import AppConfig
-from .input import read_commandline_args, prompt_for_input
+from .input import Commandline, read_commandline_args
 from .logging import setup_logging
 
 
@@ -24,7 +24,7 @@ def main():
 
     while True:
         action = app.get_action()
-        if action == 'exit':
+        if action == 'quit':
             sys.stdout.write('\n')
             log.debug('Application exited')
             break
@@ -38,6 +38,7 @@ class MainApp(object):
     def __init__(self, config):
         self.config = config
         self.log = logging.getLogger(__name__)
+        self.cmd = Commandline(self.config)
 
     def get_action(self):
         """Get an action to run"""
@@ -46,7 +47,7 @@ class MainApp(object):
             # Read first action from command line and then remove it
             del self.config['action']
         else:
-            action = prompt_for_input()
+            action = self.cmd.prompt()
 
         return action
 
