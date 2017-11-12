@@ -11,4 +11,7 @@ def read_commandline_args():
     parser.add_argument('-v', '--verbose', action='store_true',
                         help='print verbose output')
 
-    return vars(parser.parse_args())
+    config = vars(parser.parse_args())
+    if config.get('verbose'):
+        config['loglevel'] = 'DEBUG'
+    return config
