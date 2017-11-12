@@ -3,5 +3,5 @@
 # by sourcing it:
 #   . debug
 
-TRADEBOT_CONFIG_FILE="$(pwd)/config_debug.yml"
+export TRADEBOT_CONFIG_FILE="$(pwd)/config_debug.yml"
 pip install --editable .

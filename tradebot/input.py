@@ -3,9 +3,6 @@
 
 import argparse
 import cmd
-import logging
-import os
-import sys
 
 
 def read_commandline_args():
@@ -28,8 +25,8 @@ class Commandline(cmd.Cmd):
     prompt = '> '
 
     # Command methods
-
-    def do_quit(self, args):
+    # pylint: disable=no-self-use
+    def do_quit(self, *_):
         """Exit the application"""
         return True
 
@@ -50,7 +47,5 @@ class Commandline(cmd.Cmd):
         while True:
             try:
                 return cmd.Cmd.cmdloop(self, intro)
-                break
             except KeyboardInterrupt:
-                intro = '\n'
-                pass
+                intro = '^C'
