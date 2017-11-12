@@ -30,6 +30,9 @@ rpm:
 tgz:
 	$(PYTHON) setup.py sdist
 
-build: test rpm tgz
+wheel:
+	$(PYTHON) setup.py bdist_wheel
 
-.PHONY: help test rpm tgz build
+build: test tgz wheel rpm
+
+.PHONY: help test rpm tgz wheel build
