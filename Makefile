@@ -30,6 +30,6 @@ rpm:
 tgz:
 	$(PYTHON) setup.py sdist
 
-build: rpm tgz
+build: test rpm tgz
 
 .PHONY: help test rpm tgz build
