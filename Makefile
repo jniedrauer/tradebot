@@ -10,7 +10,6 @@ help:
 	@echo "Targets:"
 	@echo "venv: Create virtualenv for development"
 	@echo "test: Run unit tests"
-	@echo "lint: Check sources with pylint"
 	@echo "build: Compile package installers"
 
 $(PIP):
@@ -25,9 +24,6 @@ $(VENV)/bin/activate: requirements.txt
 test:
 	$(PYTHON) -m unittest discover -v --start-directory=tests/ --pattern=*_test.py
 
-lint:
-	$(PYLINT) $(PKG)
-
 rpm:
 	$(PYTHON) setup.py bdist_rpm
 
@@ -36,4 +32,4 @@ tgz:
 
 build: rpm tgz
 
-.PHONY: help test lint rpm tgz build
+.PHONY: help test rpm tgz build
