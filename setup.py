@@ -9,8 +9,12 @@ BASE = os.path.dirname(__file__)
 
 
 __pkginfo__ = {}
-with open(os.path.join(BASE, 'tradebot', '__pkginfo__.py')) as f:
-    exec(f.read(), __pkginfo__)
+exec(open(os.path.join(BASE, 'tradebot', '__pkginfo__.py')).read(), __pkginfo__)
+
+
+with open(os.path.join(BASE, 'README.rst'), encoding='utf-8') as f:
+    __pkginfo__['long_description'] = f.read()
+
 
 setup(
     name=__pkginfo__['distname'],
