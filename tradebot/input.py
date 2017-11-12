@@ -3,6 +3,7 @@
 
 import argparse
 import cmd
+import sys
 
 
 def read_commandline_args():
@@ -24,11 +25,26 @@ class Commandline(cmd.Cmd):
     intro = 'Type help for a list of commands.\n'
     prompt = '> '
 
+    # pylint: disable=super-init-not-called
+    def __init__(self, api):
+        self.api = api
+        self.stdin = sys.stdin
+        self.stdout = sys.stdout
+        self.cmdqueue = []
+        self.completekey = 'tab'
+
     # Command methods
     # pylint: disable=no-self-use
     def do_quit(self, *_):
         """Exit the application"""
         return True
+
+    def do_long(self, args):
+        """Enter a long position.
+        Args: ticker, quantity, max price [optional], timeout [optional]
+
+        Example: `long NEO 0.5 0.0037 3600`"""
+        self.api.long(*args)
 
     # Subclass overrides
 

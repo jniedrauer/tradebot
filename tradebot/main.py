@@ -2,10 +2,10 @@
 
 
 import logging
-import sys
 import pkg_resources
+from .api import ApiInterface
 from .config import AppConfig
-from .input import Commandline, read_commandline_args
+from .input import read_commandline_args
 from .logging import setup_logging
 
 
@@ -28,10 +28,10 @@ def main():
         in pkg_resources.iter_entry_points('tradebot.plugins')
     }
     plugins['dummy'] = 'tradebot.plugins.dummy'
-
     log.debug('Loaded plugins: %s', plugins)
+    plugin = plugins.get(config.get('plugin'))
+    if not plugin:
+        raise RuntimeError('Plugin {} not found'.format(config.get('plugin')))
 
-    cmd = Commandline()
-    cmd.cmdloop()
-    sys.stdout.write('\n')
-    log.info('Exited')
+    api = ApiInterface(plugin)
+    print(api)
