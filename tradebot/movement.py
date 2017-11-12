@@ -8,10 +8,10 @@ class Movement(object):
         self.config = config
         self.api = api
 
-    def enter(self, price=0.0, volume=0.0, spread=0.0, timeout=0.0):
+    def enter(self, market, price=0.0, volume=0.0, spread=0.0, timeout=0.0):
         """Enter a position"""
         pass
 
-    def exit(self, price=0.0, volume=0.0, spread=0.0, timeout=0.0):
+    def exit(self, market, price=0.0, volume=0.0, spread=0.0, timeout=0.0):
         """Exit a position"""
         pass
