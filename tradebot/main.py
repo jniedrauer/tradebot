@@ -1,6 +1,7 @@
 """Main module"""
 
 
+import importlib
 import logging
 import pkg_resources
 from .api import ApiInterface
@@ -29,9 +30,8 @@ def main():
     }
     plugins['dummy'] = 'tradebot.plugins.dummy'
     log.debug('Loaded plugins: %s', plugins)
-    plugin = plugins.get(config.get('plugin'))
-    if not plugin:
-        raise RuntimeError('Plugin {} not found'.format(config.get('plugin')))
+    plugin = importlib.import_module(plugins.get(config.get('plugin')))
 
-    api = ApiInterface(plugin)
-    print(api)
+    api = ApiInterface(plugin, config)
+
+    print(api.get_holdings('test'))

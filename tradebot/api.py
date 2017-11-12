@@ -26,8 +26,9 @@ class Market(object):
 class ApiInterface(object):
     """Interface for API plugins"""
 
-    def __init__(self, plugin):
-        self.plugin = plugin
+    def __init__(self, plugin, config):
+        self.plugin = plugin.ApiPlugin(config)
+        self.config = config
         self.log = logging.getLogger(__name__)
         self.log.debug('Initialized interface with plugin %s', plugin)
 
