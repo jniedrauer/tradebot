@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Setup script for package"""
 
 
@@ -22,7 +21,7 @@ setup(
     author=__pkginfo__['author'],
     author_email=__pkginfo__['author_email'],
     url=__pkginfo__['url'],
-    scripts=__pkginfo__['scripts'],
+    entry_points=__pkginfo__['entry_points'],
     classifiers=__pkginfo__['classifiers'],
     packages=[__pkginfo__['distname']],
     include_package_data=True,

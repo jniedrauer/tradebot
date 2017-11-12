@@ -2,9 +2,6 @@
 """Package info"""
 
 
-import os
-
-
 modname = distname = 'tradebot'
 numversion = (0, 0, 1)
 version = '.'.join([str(num) for num in numversion])
@@ -31,4 +28,8 @@ classifiers = [
 
 long_description = """"""
 
-scripts = [os.path.join('bin', distname)]
+entry_points = {
+    'console_scripts': [
+        'tradebot=tradebot.main:main',
+    ],
+}
