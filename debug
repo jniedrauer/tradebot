@@ -1,14 +1,7 @@
-#!/usr/bin/env python3
-"""Tradebot executable script"""
+#!/usr/bin/env bash
+# Use this script to set up a dev environment
+# by sourcing it:
+#   . debug
 
-
-import os
-os.environ['TRADEBOT_CONFIG_FILE'] = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config_debug.yml')
-
-
-from tradebot import main
-
-
-if __name__ == '__main__':
-    main.main()
+TRADEBOT_CONFIG_FILE="$(pwd)/config_debug.yml"
+pip install --editable .
