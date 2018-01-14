@@ -1,50 +1,14 @@
 # vim: set noet
-VENV=venv
-PYTHON=python3
-VENV=venv
-PIP=$(VENV)/bin/pip
 
-PKG=tradebot
+build: rpm tgz wheel
 
-help:
-	@echo "Targets:"
-	@echo "venv: Create virtualenv for development"
-	@echo "test: Run unit tests"
-	@echo "build: Compile package installers"
+rpm:
+		python setup.py bdist_rpm
 
-$(PIP):
-	$(PYTHON) -m venv $(VENV)
+tgz:
+		python setup.py sdist
 
-venv: $(VENV)/bin/activate
+wheel:
+		python setup.py bdist_wheel
 
-$(VENV)/bin/activate: requirements.txt
-	test -d $(VENV) || $(PYTHON) -m venv $(VENV)
-	$(PIP) install -Ur requirements.txt
-
-test: venv
-	( \
-		source $(VENV)/bin/activate; \
-		$(PYTHON) -m unittest discover -v --start-directory=tests/ --pattern=*_test.py; \
-	)
-
-rpm: venv
-	( \
-		source $(VENV)/bin/activate; \
-		$(PYTHON) setup.py bdist_rpm; \
-	)
-
-tgz: venv
-	( \
-		source $(VENV)/bin/activate; \
-		$(PYTHON) setup.py sdist; \
-	)
-
-wheel: venv
-	( \
-		source $(VENV)/bin/activate; \
-		$(PYTHON) setup.py bdist_wheel; \
-	)
-
-build: test tgz wheel rpm
-
-.PHONY: help source test rpm tgz wheel build
+.PHONY: build rpm tgz wheel
